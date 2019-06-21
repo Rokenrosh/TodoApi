@@ -1,9 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace TodoApi.Models.Entities
 {
@@ -29,6 +25,7 @@ namespace TodoApi.Models.Entities
         public void Configure(EntityTypeBuilder<Employee> builder)
         {
             builder.HasKey(p => p.EmployeeId);
+            builder.HasAlternateKey(p => p.Email);
 
             builder.Property(p => p.Name).HasColumnType("nvarchar(100)").IsRequired();
             builder.Property(p => p.Surname).HasColumnType("nvarchar(100)").IsRequired();
@@ -42,12 +39,11 @@ namespace TodoApi.Models.Entities
                 .HasOne(p => p.Role)
                 .WithMany()
                 .HasForeignKey(p => p.RoleId);
-
             builder
                 .Property(p => p.EmployeeId)
                 .HasColumnType("int")
                 .IsRequired()
-                .HasDefaultValueSql("NEXT VALUE FOR [Sequences].[EmployeeId]");
+                .ValueGeneratedOnAdd();
         }
     }
 
@@ -73,7 +69,7 @@ namespace TodoApi.Models.Entities
                 .Property(p => p.RoleId)
                 .HasColumnType("int")
                 .IsRequired()
-                .HasDefaultValueSql("NEXT VALUE FOR [Sequences].[RoleId]");
+                .ValueGeneratedOnAdd();
         }
     }
 }

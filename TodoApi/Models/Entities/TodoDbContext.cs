@@ -1,8 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace TodoApi.Models.Entities
 {
@@ -21,6 +17,9 @@ namespace TodoApi.Models.Entities
         }
 
         public TodoDbContext(DbContextOptions<TodoDbContext> options)
-            : base(options) { }
+            : base(options)
+        {
+            Database.EnsureCreated();
+        }
     }
 }
