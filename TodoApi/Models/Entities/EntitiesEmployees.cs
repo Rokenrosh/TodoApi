@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace TodoApi.Models
+namespace TodoApi.Models.Entities
 {
     public class Employee
     {
@@ -16,6 +16,16 @@ namespace TodoApi.Models
         public string Password { get; set; }
         public string Nickname { get; set; }
         public Employee()
+        {
+
+        }
+    }
+
+    public class Role
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public Role()
         {
 
         }
