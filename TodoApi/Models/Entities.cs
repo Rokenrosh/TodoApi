@@ -43,9 +43,9 @@ namespace TodoApi.Models
 
         public string Project { get; set; }
 
-        public List<User> Members { get; set; }
+        public List<Employee> Members { get; set; }
 
-        public List<User> Admins { get; set; }
+        public List<Employee> Admins { get; set; }
 
         public DateTime? CreationDate { get; set; }
 
