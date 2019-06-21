@@ -14,12 +14,12 @@ namespace TodoApi.Models.Entities
 
         }
 
-        public Task(int? taskId)
+        public Task(int taskId)
         {
             TaskId = taskId;
         }
 
-        public int? TaskId { get; set; }
+        public int TaskId { get; set; }
 
         public string Name { get; set; }
 
@@ -27,13 +27,13 @@ namespace TodoApi.Models.Entities
 
         public int? ParentId { get; set; }
 
-        public int? UserId { get; set; }
+        public int UserId { get; set; }
 
         public ICollection<Task> Subtasks { get; set; }
 
         public int? Priority { get; set; }
 
-        public int? Status { get; set; }
+        public int Status { get; set; }
 
         public DateTime? StartTime { get; set; }
 
