@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace TodoApi.Models
+namespace TodoApi.Models.Entities
 {
     public partial class Task
     {
@@ -39,7 +39,7 @@ namespace TodoApi.Models
 
         public DateTime? EndTime { get; set; }
 
-        public double Period{ get; set; }
+        public double Period { get; set; }
 
         public string Project { get; set; }
 
@@ -86,3 +86,4 @@ namespace TodoApi.Models
     }
 
 }
+
