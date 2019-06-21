@@ -39,7 +39,7 @@ namespace TodoApi.Models.Entities
 
         public DateTime? EndTime { get; set; }
 
-        public double Period { get; set; }
+        public double? Period { get; set; }
 
         public string Project { get; set; }
 
