@@ -37,16 +37,43 @@ namespace TodoApi.Models.Entities
             builder.Property(p => p.Email).HasColumnType("nvarchar(255)").IsRequired();
             builder.Property(p => p.Password).HasColumnType("nvarchar(100)").IsRequired();
             builder.Property(p => p.Nickname).HasColumnType("nvarchar(30)").IsRequired();
+
+            builder
+                .HasOne(p => p.Role)
+                .WithMany()
+                .HasForeignKey(p => p.RoleId);
+
+            builder
+                .Property(p => p.EmployeeId)
+                .HasColumnType("int")
+                .IsRequired()
+                .HasDefaultValueSql("NEXT VALUE FOR [Sequences].[EmployeeId]");
         }
     }
 
     public class Role
     {
-        public int Id { get; set; }
+        public int RoleId { get; set; }
         public string Name { get; set; }
         public Role()
         {
 
+        }
+    }
+
+    public class RoleConfiguration : IEntityTypeConfiguration<Role>
+    {
+        public void Configure(EntityTypeBuilder<Role> builder)
+        {
+            builder.HasKey(p => p.RoleId);
+
+            builder.Property(p => p.Name).HasColumnType("nvarchar(20)").IsRequired();
+
+            builder
+                .Property(p => p.RoleId)
+                .HasColumnType("int")
+                .IsRequired()
+                .HasDefaultValueSql("NEXT VALUE FOR [Sequences].[RoleId]");
         }
     }
 }
