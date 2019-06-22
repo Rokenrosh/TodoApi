@@ -13,6 +13,8 @@ namespace TodoApi.Models.Entities
             modelBuilder.ApplyConfiguration(new TasksConfiguration());
             modelBuilder.ApplyConfiguration(new EmployeeConfiguration());
             modelBuilder.ApplyConfiguration(new RoleConfiguration());
+            modelBuilder.ApplyConfiguration(new TaskAdminsConfiguration());
+            modelBuilder.ApplyConfiguration(new TaskMembersConfiguration());
             base.OnModelCreating(modelBuilder);
         }
 

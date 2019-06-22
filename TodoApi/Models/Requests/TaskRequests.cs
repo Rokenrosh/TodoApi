@@ -21,7 +21,7 @@ namespace TodoApi.Models.Requests
         public int? ParentId { get; set; }
 
         [Required]
-        public int UserId { get; set; }
+        public int EmployeeId { get; set; }
 
         public ICollection<Entities.Task> Subtasks { get; set; }
 
@@ -40,10 +40,10 @@ namespace TodoApi.Models.Requests
         public string Project { get; set; }
 
         [Required]
-        public List<Employee> Members { get; set; }
+        public List<TaskMembers> Members { get; set; }
 
         [Required]
-        public List<Employee> Admins { get; set; }
+        public List<TaskAdmins> Admins { get; set; }
 
         [Required]
         public DateTime? CreationDate { get; set; }
@@ -92,7 +92,7 @@ namespace TodoApi.Models.Requests
                 StartTime = request.StartTime,
                 EndTime = request.EndTime,
                 Period = request.Period,
-                UserId = request.UserId,
+                EmployeeId = request.EmployeeId,
                 Subtasks = request.Subtasks,
                 Name = request.Name,
                 Status = request.Status
