@@ -10,7 +10,7 @@ namespace TodoApi
 {
     public class Program
     {
-        public static async void Main(string[] args)
+        public static void Main(string[] args)
         {
             var host = CreateWebHostBuilder(args).Build();
             using(var scope = host.Services.CreateScope())
@@ -19,7 +19,7 @@ namespace TodoApi
                 try
                 {
                     var dbcontext = services.GetRequiredService<TodoDbContext>();
-                    await RoleInitializer.InitializeAsync(dbcontext);
+                    RoleInitializer.InitializeAsync(dbcontext).Wait();
                 }
                 catch(Exception ex)
                 {

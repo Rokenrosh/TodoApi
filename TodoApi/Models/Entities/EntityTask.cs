@@ -11,7 +11,9 @@ namespace TodoApi.Models.Entities
     {
         public Task()
         {
-
+            Subtasks = new List<Task>();
+            Members = new List<TaskMembers>();
+            Admins = new List<TaskAdmins>();
         }
 
         public Task(int taskId)
@@ -27,7 +29,9 @@ namespace TodoApi.Models.Entities
 
         public int? ParentId { get; set; }
 
-        public int UserId { get; set; }
+        public int EmployeeId { get; set; }
+
+        public Employee Employee { get; set; }
 
         public ICollection<Task> Subtasks { get; set; }
 
@@ -43,9 +47,9 @@ namespace TodoApi.Models.Entities
 
         public string Project { get; set; }
 
-        public List<Employee> Members { get; set; }
+        public List<TaskMembers> Members { get; set; }
 
-        public List<Employee> Admins { get; set; }
+        public List<TaskAdmins> Admins { get; set; }
 
         public DateTime? CreationDate { get; set; }
 
@@ -54,34 +58,74 @@ namespace TodoApi.Models.Entities
         public DateTime? LastChangeDate { get; set; }
     }
 
+    public class TaskMembers
+    {
+        public int TaskId { get; set; }
+        public int EmployeeId { get; set; }
+    }
+
+    public class TaskMembersConfiguration : IEntityTypeConfiguration<TaskMembers>
+    {
+        public void Configure(EntityTypeBuilder<TaskMembers> builder)
+        {
+            builder.HasKey(x => new { x.EmployeeId, x.TaskId });
+        }
+    }
+
+    public class TaskAdmins
+    {
+        public int TaskId { get; set; }
+        public int EmployeeId { get; set; }
+    }
+
+    public class TaskAdminsConfiguration : IEntityTypeConfiguration<TaskAdmins>
+    {
+        public void Configure(EntityTypeBuilder<TaskAdmins> builder)
+        {
+            builder.HasKey(x => new { x.EmployeeId, x.TaskId });
+        }
+    }
+
     public class TasksConfiguration : IEntityTypeConfiguration<Task>
     {
         public void Configure(EntityTypeBuilder<Task> builder)
         {
-            builder.ToTable("Tasks", "ToDo");
             builder.HasKey(p => p.TaskId);
             builder.Property(p => p.Name).HasColumnType("nvarchar(100)").IsRequired();
             builder.Property(p => p.ParentId).HasColumnType("int");
-            builder.Property(p => p.UserId).HasColumnType("int");
-            builder.HasMany(p => p.Subtasks).WithOne().HasForeignKey("ParentId").IsRequired(false);
+            builder.Property(p => p.EmployeeId).HasColumnType("int");
             builder.Property(p => p.Priority).HasColumnType("int");
             builder.Property(p => p.Status).HasColumnType("int");
             builder.Property(p => p.StartTime).HasColumnType("datetime2");
             builder.Property(p => p.EndTime).HasColumnType("datetime2");
             builder.Property(p => p.Period).HasColumnType("float");
             builder.Property(p => p.Project).HasColumnType("nvarchar(50)");
-            builder.HasMany(p => p.Members).WithOne().HasForeignKey("UserId").IsRequired();
-            builder.HasMany(p => p.Admins).WithOne().HasForeignKey("UserId").IsRequired();
             builder.Property(p => p.Description).HasColumnType("nvarchar(1000)");
 
+            builder.HasMany(p => p.Members)
+                .WithOne()
+                .HasForeignKey(p => p.TaskId)
+                .OnDelete(DeleteBehavior.Restrict);
+            builder.HasMany(p => p.Admins)
+                .WithOne()
+                .HasForeignKey(p => p.TaskId)
+                .OnDelete(DeleteBehavior.Cascade);
+            builder.HasMany(p => p.Subtasks)
+                .WithOne(p => p.Parent)
+                .HasForeignKey(p => p.ParentId)
+                .IsRequired(false);
             builder.Property(p => p.TaskId)
                 .HasColumnType("int")
                 .IsRequired()
-                .HasDefaultValueSql("NEXT VALUE FOR [Sequences].[TaskId]");
-
-            builder.Property(p => p.CreationDate).HasColumnType("datetime2").IsRequired().ValueGeneratedOnAdd();
-
-            builder.Property(p => p.LastChangeDate).HasColumnType("datetime2").IsRequired().ValueGeneratedOnAddOrUpdate();
+                .ValueGeneratedOnAdd();
+            builder.Property(p => p.CreationDate)
+                .HasColumnType("datetime2")
+                .IsRequired()
+                .ValueGeneratedOnAdd();
+            builder.Property(p => p.LastChangeDate)
+                .HasColumnType("datetime2")
+                .IsRequired()
+                .ValueGeneratedOnAddOrUpdate();
         }
     }
 

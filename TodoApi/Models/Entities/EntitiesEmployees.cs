@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System.Collections.Generic;
 
 namespace TodoApi.Models.Entities
 {
@@ -14,9 +15,14 @@ namespace TodoApi.Models.Entities
         public string Email { get; set; }
         public string Password { get; set; }
         public string Nickname { get; set; }
+        public ICollection<Task> Tasks { get; set; }
+        public ICollection<TaskAdmins> TaskAdmins { get; set; }
+        public ICollection<TaskMembers> TaskMembers { get; set; }
         public Employee()
         {
-
+            Tasks = new List<Task>();
+            TaskAdmins = new List<TaskAdmins>();
+            TaskMembers = new List<TaskMembers>();
         }
     }
 
@@ -35,6 +41,14 @@ namespace TodoApi.Models.Entities
             builder.Property(p => p.Password).HasColumnType("nvarchar(100)").IsRequired();
             builder.Property(p => p.Nickname).HasColumnType("nvarchar(30)").IsRequired();
 
+            builder.HasMany(p => p.TaskAdmins)
+                .WithOne()
+                .HasForeignKey(p => p.EmployeeId)
+                .OnDelete(DeleteBehavior.Restrict);
+            builder.HasMany(p => p.TaskMembers)
+                .WithOne()
+                .HasForeignKey(p => p.EmployeeId)
+                .OnDelete(DeleteBehavior.Restrict);
             builder
                 .HasOne(p => p.Role)
                 .WithMany()
@@ -44,6 +58,11 @@ namespace TodoApi.Models.Entities
                 .HasColumnType("int")
                 .IsRequired()
                 .ValueGeneratedOnAdd();
+            builder
+                .HasMany(x => x.Tasks)
+                .WithOne(x => x.Employee)
+                .HasForeignKey(x => x.EmployeeId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 

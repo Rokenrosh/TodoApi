@@ -36,8 +36,7 @@ namespace TodoApi.Controllers
                 RoleId = role.RoleId,
                 Role = role
             };
-            _todoDbContext.Add<Role>(role);
-            _todoDbContext.Add<Employee>(emp);
+            _todoDbContext.Add(emp);
             await _todoDbContext.SaveChangesAsync();
             return new ObjectResult(emp);
         }
