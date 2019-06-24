@@ -9,7 +9,7 @@ using TodoApi.Models.Entities;
 
 namespace TodoApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/user[controller]")]
     [ApiController]
     public class EmployeeController : ControllerBase
     {

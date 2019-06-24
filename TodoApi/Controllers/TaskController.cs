@@ -13,8 +13,8 @@ using Task = TodoApi.Models.Entities.Task;
 
 namespace TodoApi.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/v1/[controller]")]
     public class TaskController : ControllerBase
     {
         protected readonly ILogger Logger;
@@ -120,6 +120,66 @@ namespace TodoApi.Controllers
 
                 Logger?.LogCritical("There was an error on '{0}' invocation: {1}", nameof(PostTaskAsync), ex);
             }
+            return response.ToHttpResponse();
+        }
+
+        [HttpPut("Task/{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> PutTaskAsync(int id, [FromBody]PutTaskRequest request)
+        {
+            Logger?.LogDebug("'{0}' has been invoked", nameof(PutTaskAsync));
+            var response = new Response();
+
+            try
+            {
+                var entity = await DbContext.GetTaskAsync(new Task(id));
+
+                if (entity == null)
+                    return NotFound();
+
+                entity.Name = request.Name;
+
+                DbContext.Update(entity);
+
+                await DbContext.SaveChangesAsync();
+            }
+            catch(Exception ex)
+            {
+                response.DidError = true;
+                response.ErrorMessage = "There was an internal error, please contact to technical support.";
+
+                Logger?.LogCritical("There was an error on '{0}' invocation: {1}", nameof(PutTaskAsync), ex);
+            }
+
+            return response.ToHttpResponse();
+        }
+
+        public async Task<IActionResult> DeleteTaskAsync(int id)
+        {
+            Logger?.LogDebug("'{0}' has been invoked", nameof(DeleteTaskAsync));
+
+            var response = new Response();
+
+            try
+            {
+                var entity = await DbContext.GetTaskAsync(new Task(id));
+
+                if (entity == null)
+                    return NotFound();
+
+                DbContext.Remove(entity);
+                await DbContext.SaveChangesAsync();
+            }
+            catch(Exception ex)
+            {
+                response.DidError = true;
+                response.ErrorMessage = "There was an internal error, please contact to technical support.";
+
+                Logger?.LogCritical("There was an error on '{0}' invocation: {1}", nameof(DeleteTaskAsync), ex);
+            }
+
             return response.ToHttpResponse();
         }
     }
