@@ -20,4 +20,10 @@ namespace TodoApi.Models.Entities
         public static async Task<Task> GetTaskByNameAsync(this TodoDbContext dbContext, Task entity)
             => await dbContext.Tasks.FirstOrDefaultAsync(item => item.Name == entity.Name);
     }
+
+    public static class IQueryableExtensions
+    {
+        public static IQueryable<TModel> Paging<TModel>(this IQueryable<TModel> query, int pageSize = 0, int pageNumber = 0) where TModel : class
+            => pageSize > 0 && pageNumber > 0 ? query.Skip((pageNumber - 1) * pageSize).Take(pageSize) : query;
+    }
 }
